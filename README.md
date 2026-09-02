@@ -46,6 +46,9 @@ cmake_minimum_required(VERSION 3.20)
 # set the project name
 project(Tutorial)
 
+# Enable IAR Compiler extensions (-e)
+set(CMAKE_C_EXTENSIONS ON)
+
 # add the executable target
 add_executable(tutorial)
 
