@@ -14,8 +14,7 @@ Before you begin, you will need to download and install the IAR product, CMake a
 
 | Product                  | For Evaluation                                                                 | For IAR Subscribers
 | -                        | -                                                                              | -
-| IAR Build Tools (CX) ☁️  | [Contact us](https://iar.com/about/contact)                                    | for [Arm](https://updates.iar.com/?product=CXARM)<br>for [RISC-V](https://updates.iar.com/?product=CXRISCV)<br>for [Renesas RH850](https://updates.iar.com/?product=CXRH850)<br>for [Renesas RL78](https://updates.iar.com/?product=CXRL78)<br>for [Renesas RX](https://updates.iar.com/?product=CXRX)<br>
-| IAR Build Tools (BX)     | [Contact us](https://iar.com/about/contact)                                    | for [Arm](https://updates.iar.com/?product=BXARM)[^2] (or for others[^3])
+| IAR Build Tools        | [Contact us](https://iar.com/about/contact)                                    | for [Arm](https://updates.iar.com/?product=CXARM)<br>for [RISC-V](https://updates.iar.com/?product=CXRISCV)<br>for [Renesas RH850](https://updates.iar.com/?product=CXRH850)<br>for [Renesas RL78](https://updates.iar.com/?product=CXRL78)<br>for [Renesas RX](https://updates.iar.com/?product=CXRX)<br>
 | IAR Embedded Workbench   | [Try now](https://www.iar.com/embedded-development-tools/free-trials)          | for [Arm](https://updates.iar.com/?product=EWARM)[^2] (or for others[^3])
      
 2) Download and install [CMake](https://github.com/Kitware/CMake/releases/latest).
@@ -24,7 +23,7 @@ Before you begin, you will need to download and install the IAR product, CMake a
 
 ## Building a Basic CMake Project
 >[!NOTE]
->While this guide is based on the IAR Build Tools for Arm (CXARM) 9.70.2 on Linux, it should work with other supported IAR products with no or minimal changes.
+>While this guide is based on the IAR Build Tools for Arm 10.10.2 on Linux, it should work with other supported IAR products with no or minimal changes.
 
 The most basic CMake project is an executable built from a single source code file. For simple projects like this, a `CMakeLists.txt` file with about half dozen of commands is all that is required.
 
@@ -69,28 +68,28 @@ CMake uses the host platform's default compiler. When cross-compiling embedded a
 
 | Variable             | Description                               | Examples (for Arm)
 | -                    | -                                         | -
-| `CMAKE_C_COMPILER`   | Must point to the C Compiler executable   | `"/opt/iar/cxarm/arm/bin/iccarm"`<br>`"/opt/iarsystems/bxarm/arm/bin/iccarm"`<br>`"C:/iar/..../arm/bin/iccarm.exe"`
-| `CMAKE_CXX_COMPILER` | Must point to the C++ Compiler executable | `"/opt/iar/cxarm/arm/bin/iccarm"`<br>`"/opt/iarsystems/bxarm/arm/bin/iccarm"`<br>`"C:/iar/..../arm/bin/iccarm.exe"`<br>`"${CMAKE_C_COMPILER}"`
-| `CMAKE_ASM_COMPILER` | Must point to the Assembler executable    | `"/opt/iar/cxarm/arm/bin/iasmarm"`<br>`"/opt/iarsystems/bxarm/arm/bin/iasmarm"`<br>`"C:/iar/..../arm/bin/iasmarm.exe"`
-| `CMAKE_MAKE_PROGRAM` | Must point to the build tool executable   | `"/opt/iar/cxarm/common/bin/ninja"`<br>`"/opt/iarsystems/bxarm/common/bin/ninja"`<br>`"C:/iar/..../common/bin/ninja.exe"`
+| `CMAKE_C_COMPILER`   | Must point to the C Compiler executable   | `"/opt/iar/cxarm/arm/bin/iccarm"`<br>`"C:/iar/..../arm/bin/iccarm.exe"`
+| `CMAKE_CXX_COMPILER` | Must point to the C++ Compiler executable | `"/opt/iar/cxarm/arm/bin/iccarm"`<br>`"C:/iar/..../arm/bin/iccarm.exe"`<br>`"${CMAKE_C_COMPILER}"`
+| `CMAKE_ASM_COMPILER` | Must point to the Assembler executable    | `"/opt/iar/cxarm/arm/bin/iasmarm"`<br>`"C:/iar/..../arm/bin/iasmarm.exe"`
+| `CMAKE_MAKE_PROGRAM` | Must point to the build tool executable   | `"/opt/iar/cxarm/common/bin/ninja"`<br>`"C:/iar/..../common/bin/ninja.exe"`
 
 During the configuration phase, CMake reads these variables from:
-- a separate file called "toolchain file" that you invoke `cmake` with `--toolchain /path/to/<filename>.cmake` (see provided example files [cxarm.cmake](tutorial/cxarm.cmake), [bxarm.cmake](tutorial/bxarm.cmake) and [ewarm.cmake](tutorial/ewarm.cmake)) -or-
+- a separate file called "toolchain file" that you invoke `cmake` with `--toolchain /path/to/<filename>.cmake` (see provided examples in [tutorial](tutorial)) -or-
 - the [`CMAKE_TOOLCHAIN_FILE`](https://cmake.org/cmake/help/latest/variable/CMAKE_TOOLCHAIN_FILE.html) variable, when you invoke `cmake` with `-DCMAKE_TOOLCHAIN_FILE=/path/to/<filename>.cmake` (useful for CMake < 3.21) -or-
 - invoking `cmake` with `-DCMAKE_<lang>_COMPILER=/path/to/icc<target>` -or-
 - the user/system environment variables [`CC`](https://cmake.org/cmake/help/latest/envvar/CC.html), [`CXX`](https://cmake.org/cmake/help/latest/envvar/CXX.html) and [`ASM`](https://cmake.org/cmake/help/latest/envvar/ASM.html) which can be used to override the platform's default compiler -or-
-- the IAR Embedded Workbench IDE 9.3 or later, shipped with IAR products starting from the IAR Embedded Workbench for Arm 9.50, where the available IAR toolchain environment is automatically set for CMake projects (See [this article](https://github.com/IARSystems/cmake-tutorial/wiki/Building-and-Debugging-from-the-Embedded-Workbench) for details).
+- the IAR Embedded Workbench IDE 9.3.2 or later, shipped with IAR products starting from the IAR Embedded Workbench for Arm 9.50.1, where the available IAR toolchain environment is automatically set for CMake projects (See [this article](https://github.com/IARSystems/cmake-tutorial/wiki/Building-and-Debugging-from-the-Embedded-Workbench) for details).
 
 ### Configure and Build
 We are ready to build our first project! Run CMake to configure the project and then build it with your chosen build tool.
 
 - Before starting to use CMake, make sure your compiler is working properly. Below you will find an oneliner that will try to compile a simple module:
 ```console
-$ echo "main(){}" | /opt/iar/cxarm/arm/bin/iccarm --output $(mktemp) -
+$ echo "main(){}" | /opt/iar/cxarm/arm/bin/iccarm -
 
-   IAR ANSI C/C++ Compiler V9.70.2.500/LNX for ARM
-   Copyright 1999-2025 IAR Systems AB.
-   LMS Cloud License (LMSC 2.1.1)
+   IAR ANSI C/C++ Compiler V10.10.2.628/LNX for ARM
+   Copyright 1999-2026 IAR Systems AB.
+   LMS Cloud License (LMSC 2.1.2)
  
  4 bytes of CODE memory
 
@@ -104,7 +103,7 @@ Warnings: none
 mkdir build
 ```
 
-- Next, navigate to that build directory and run CMake to configure the project and generate a native build system using the compiler specified in the `cxarm.cmake` toolchain file (if needed, edit the supplied toolchain file to match your tool):
+- Next, navigate to that build directory and run CMake to configure the project and generate a native build system using the compiler specified in the [`cxarm.cmake`](tutorial) toolchain file (if needed, edit the supplied toolchain file to match your tool):
 ```
 cd build
 cmake .. -G Ninja --toolchain ../cxarm.cmake
